@@ -1,0 +1,16 @@
+rank,rankChange,domain,category
+0,0,google.com,Technology
+1,0,tiktok.com,Entertainment
+2,0,facebook.com,Society & Lifestyle
+3,0,microsoft.com,Business & Economy
+4,0,apple.com,Technology
+5,0,amazon.com,Shopping & Auctions
+6,0,youtube.com,Entertainment
+7,0,netflix.com,Entertainment
+8,1,instagram.com,Society & Lifestyle
+9,-1,mozilla.org,Technology
+10,0,starlink.com,Technology
+11,0,whatsapp.com,Internet Communication
+12,0,yandex.com,Technology
+13,0,twitter.com,Society & Lifestyle
+14,0,cloudflare.com,Technology
