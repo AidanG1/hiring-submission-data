@@ -1,0 +1,15 @@
+name = "api"
+main = "src/index.ts"
+compatibility_date = "2022-10-06"
+account_id = "7cbf2c7d413561731586b66773eb028b"
+type = "javascript"
+
+workers_dev = false
+routes = [
+    "general.ttnt.workers.dev/*"
+]
+zone_id = "3c4dc7efd5596f66a320efcca3e41951"
+
+kv_namespaces = [
+  { binding = "kvwrangler", id = "62ac40e692a046b492bb85013e80d96a" }
+]

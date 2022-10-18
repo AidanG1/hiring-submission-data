@@ -2,5 +2,5 @@ Git Credentials:
 Username: J1BNrzgThMMMrWJt4AFe2
 Password: fZMf6ap2
 
-Workers URL: 
+Workers URL: https://general.ttnt.workers.dev/
 Pages URL: 
