@@ -1,17 +1,25 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
-const renderLineChart = (data) => {
-  console.log(data);
+const renderLineChart = (data, num, title) => {
   return (
-    <LineChart width={600} height={300} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-      <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-      <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-    </LineChart>
+    <div className='container'>
+      <h1>
+      {num === 0 ? 'Traffic Change Over Time' : 'Layer 3 Traffic Over Time'}
+      </h1>
+      <LineChart width={1000} height={500} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+        {num === 0 ?
+          <><Line type="monotone" dataKey="http" stroke="red" /><Line type="monotone" dataKey="total" stroke="blue" /></> :
+          <Line type="monotone" dataKey="percentage" stroke="red" />
+        }
+        <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
+        <XAxis dataKey="time" />
+        <YAxis />
+        <Legend />
+        <Tooltip/>
+      </LineChart>
+    </div>
   )
 };
 
@@ -31,8 +39,38 @@ function App() {
     async function fetchData() {
       const response = await Promise.all(routes.map(route => fetch(route)));
       const json = await Promise.all(response.map(res => res.json()));
+      json[0] = convertTraffic(json[0]);
+      // converting popular is unnecessary since it is just a table
+      json[2] = convertLayer3(json[2]);
       setData(json);
       setLoading(false);
+    }
+    function convertTraffic(raw) {
+      console.log(raw);
+      let data = [];
+      const num = (raw.data.http.length) / 2
+      console.log(num);
+      for (let i = 0; i < num; i++) {
+        data.push({
+          time: raw.data.http[i].value,
+          http: raw.data.http[i + num].value,
+          total: raw.data.total[i + num].value,
+        })
+      }
+      console.log(data);
+      return data;
+    }
+    function convertLayer3(raw) {
+      let data = [];
+      const num = (raw.data.length) / 2
+      for (let i = 0; i < num; i++) {
+        data.push({
+          time: raw.data[i].value,
+          percentage: raw.data[i + num].value,
+        })
+      }
+      console.log(data);
+      return data;
     }
     fetchData();
   }, []);
@@ -48,9 +86,13 @@ function App() {
         </ul>
         {active}
       </div>
-      <div>
-        {loading ? 'Loading...' : renderLineChart(data[active])}
-      </div>
+      {
+        data !== null ? <div>
+          {active === 0 || active === 2 ? renderLineChart(data[active], active) : <div>Popular Domains</div>}
+        </div>
+          : <div>Loading...</div>
+      }
+
     </div>
   );
 }
