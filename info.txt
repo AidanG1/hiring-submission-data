@@ -3,4 +3,4 @@ Username: J1BNrzgThMMMrWJt4AFe2
 Password: fZMf6ap2
 
 Workers URL: https://general.ttnt.workers.dev/
-Pages URL: 
+Pages URL: https://hire4job.pages.dev/

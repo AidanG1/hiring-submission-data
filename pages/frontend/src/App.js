@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 const renderLineChart = (data, num, title) => {
+  // create line chart using recharts
   return (
     <div className='container'>
       <h1>
-        {num === 0 ? 'Traffic Change Over Time' : 'Layer 3 Traffic Over Time'}
+        {num === 0 ? 'Traffic Change Over Time' : 'Layer 3 Percentage Over Time'}
       </h1>
       <LineChart width={1000} height={500} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
         {num === 0 ?
@@ -24,7 +25,7 @@ const renderLineChart = (data, num, title) => {
 };
 
 function App() {
-  // get data
+  // get data from routes
   const routes = [
     'https://general.ttnt.workers.dev/traffic-change',
     'https://general.ttnt.workers.dev/popular-domains',
@@ -35,12 +36,16 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
 
+  // get data on page load
   useEffect(() => {
     async function fetchData() {
+      // use promise all to get all data at once
       const response = await Promise.all(routes.map(route => fetch(route)));
       const json = await Promise.all(response.map(res => res.json()));
+      // convert traffic to array of objects so that it can be graphed
       json[0] = convertTraffic(json[0]);
       // converting popular is unnecessary since it is just a table
+      // convert layer3 to array of objects
       json[2] = convertLayer3(json[2]);
       setData(json);
       setLoading(false);
@@ -72,10 +77,11 @@ function App() {
       console.log(data);
       return data;
     }
+    // finally, fetch the data
     fetchData();
   }, []);
 
-
+  // 4 if statements for the 4 tabs
   return (
     <div>
       <div className="tabs is-centered">
