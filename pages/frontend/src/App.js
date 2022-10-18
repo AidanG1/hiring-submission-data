@@ -6,7 +6,7 @@ const renderLineChart = (data, num, title) => {
   return (
     <div className='container'>
       <h1>
-      {num === 0 ? 'Traffic Change Over Time' : 'Layer 3 Traffic Over Time'}
+        {num === 0 ? 'Traffic Change Over Time' : 'Layer 3 Traffic Over Time'}
       </h1>
       <LineChart width={1000} height={500} data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
         {num === 0 ?
@@ -17,7 +17,7 @@ const renderLineChart = (data, num, title) => {
         <XAxis dataKey="time" />
         <YAxis />
         <Legend />
-        <Tooltip/>
+        <Tooltip />
       </LineChart>
     </div>
   )
@@ -83,16 +83,50 @@ function App() {
           <li className={active === 0 ? 'is-active' : ''} onClick={() => setActive(0)}><a>Traffic Change</a></li>
           <li className={active === 1 ? 'is-active' : ''} onClick={() => setActive(1)}><a>Popular Domains</a></li>
           <li className={active === 2 ? 'is-active' : ''} onClick={() => setActive(2)}><a>Layer 3</a></li>
+          <li className={active === 3 ? 'is-active' : ''} onClick={() => setActive(3)}><a>About</a></li>
         </ul>
         {active}
       </div>
       {
-        data !== null ? <div>
-          {active === 0 || active === 2 ? renderLineChart(data[active], active) : <div>Popular Domains</div>}
-        </div>
-          : <div>Loading...</div>
-      }
+        active === 0 ?
+          loading ? <p>Loading...</p> : renderLineChart(data[0], 0) :
+          active === 1 ? <>
+            <h1>Popular Domains</h1>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Rank Change</th>
+                  <th>Domain</th>
+                  <th>Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data !== null ? data[active].rankingEntries.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{item.rank}</td>
+                      {
+                        item.rankChange === '0' ? <td>0</td> :
+                          item.rankChange > 0 ? <td className="has-text-success">+{item.rankChange}</td> :
+                            <td className="has-text-danger">{item.rankChange}</td>
+                      }
+                      <td><a href={`https://${item.domain}`} target="_blank">{item.domain}</a></td>
+                      <td>{item.category}</td>
+                    </tr>
+                  )
+                }) : null}
+              </tbody>
+            </table>
+          </>
+            : active === 2 ? loading ? <p>Loading...</p> : renderLineChart(data[2], 2) :
+              <div className="container">
+                <h1>About</h1>
+                <p>This is the Cloudflare coding challenge created by Aidan Gerber.</p>
+                <a href="https://github.com/AidanG1/hiring-submission-data" target="_blank">Github Repo</a>
+              </div>
 
+      }
     </div>
   );
 }
